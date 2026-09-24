@@ -1,32 +1,45 @@
-# emotion-logs
-### Emotion log app is a digital tool that helps you track and monitor your emotions. By recording and analyzing your mood changes over time, you can gain valuable insights into your emotional well-being.
+# EmotionLogs
 
-## Run locally
+**Web app in progress.**
 
-From `emotion_tracker`, activate your virtual environment and run:
+EmotionLogs is a personal emotion journal where users can record how they felt on a specific date and write about the experience behind that emotion. The app is designed to keep this process simple, private, and easy to return to over time.
 
-```powershell
-python manage.py migrate
-python manage.py runserver
-```
+## What I am making
 
-Open `http://127.0.0.1:8000/`.
+- A user account and login system
+- A private journal for each user
+- Emotion notes with a date, emotion, and personal experience
+- A clean interface for writing, viewing, and editing notes
+- A secure foundation that can later grow with features such as mood patterns and analytics
 
-## Google sign-in
+## What I am learning
 
-Google sign-in is optional. Create a Web application OAuth client in Google Cloud, then add this authorized redirect URI:
+Building this app is helping me learn how to:
 
-```text
-http://127.0.0.1:8000/accounts/google/login/callback/
-```
+- Build a full web application with Django
+- Design database models and manage migrations
+- Create forms and validate user input
+- Work with authentication, sessions, and user permissions
+- Protect private user data
+- Create responsive interfaces with Bootstrap
+- Organize a project into reusable apps, views, templates, and URLs
+- Prepare an application for deployment and version control with Git and GitHub
 
-Set the credentials in the terminal before starting Django. Do not commit them or place real values in `.env.example`:
+## Project files
 
-```powershell
-$env:DJANGO_SECRET_KEY = 'replace-with-a-long-random-secret'
-$env:GOOGLE_CLIENT_ID = 'your-client-id'
-$env:GOOGLE_CLIENT_SECRET = 'your-client-secret'
-python manage.py runserver
-```
+- [Django settings](emotion_tracker/emotion_tracker/settings.py)
+- [Main project URLs](emotion_tracker/emotion_tracker/urls.py)
+- [Emotion note model](emotion_tracker/emotion_logs/models.py)
+- [Emotion note forms](emotion_tracker/emotion_logs/forms.py)
+- [Emotion note views](emotion_tracker/emotion_logs/views.py)
+- [Emotion note URLs](emotion_tracker/emotion_logs/urls.py)
+- [Emotion note tests](emotion_tracker/emotion_logs/tests.py)
+- [Shared page layout](emotion_tracker/emotion_logs/templates/emotion_logs/base.html)
+- [Journal page](emotion_tracker/emotion_logs/templates/emotion_logs/topics.html)
+- [New note page](emotion_tracker/emotion_logs/templates/emotion_logs/new_entry.html)
+- [Login page](emotion_tracker/accounts/templates/registration/login.html)
+- [Registration page](emotion_tracker/accounts/templates/registration/register.html)
+- [Database migrations](emotion_tracker/emotion_logs/migrations/)
+- [Project dependencies](emotion_tracker/requirements.txt)
 
-The Google button appears on the login page only when both variables are set. Production should use the HTTPS callback URL for its deployed domain.
+More features and improvements will be added as I continue learning and building the app.
