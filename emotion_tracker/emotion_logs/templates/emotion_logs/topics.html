@@ -1,23 +1,43 @@
 {% extends 'emotion_logs/base.html' %}
 
+{% block title %}My journal | Emotion Logs{% endblock title %}
+
 
 {% block page_header %}
-    <h1>Topics</h1>
+    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+        <div>
+            <p class="text-uppercase text-muted small fw-semibold mb-2">Your private journal</p>
+            <h1 class="mb-0">My emotion notes</h1>
+        </div>
+        <a class="btn btn-primary" href="{% url 'emotion_logs:new_entry' %}">Add a note</a>
+    </div>
 {% endblock page_header %}
 
 {% block content %}
 
-<ul class="list-group border-bottom pb-2 mb-4">
-    {% for topic in topics %}
-        <li class="list-group-item border-0">
-            <a href="{% url 'emotion_logs:topic' topic.id %}">
-            {{ topic.text }}</a></li>
-        </li>
+<div class="row g-3">
+    {% for entry in entries %}
+        <div class="col-12 col-lg-6">
+            <article class="entry-card bg-white h-100 p-4">
+                <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                    <div>
+                        <p class="text-muted small mb-1">{{ entry.date|date:'l, F j, Y' }}</p>
+                        <span class="badge rounded-pill emotion-badge">{{ entry.emotion }}</span>
+                    </div>
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'emotion_logs:edit_entry' entry.id %}">Edit</a>
+                </div>
+                <p class="mb-0 text-break">{{ entry.experience|linebreaksbr }}</p>
+            </article>
+        </div>
     {% empty %}
-    <li class="list-group-item border-0">No topics have been added yet.</li>
+        <div class="col-12">
+            <div class="card bg-white p-5 text-center">
+                <h2 class="h4">Your journal is ready.</h2>
+                <p class="text-muted mb-4">Add your first note to begin noticing patterns in how you feel.</p>
+                <a class="btn btn-primary align-self-center" href="{% url 'emotion_logs:new_entry' %}">Write your first note</a>
+            </div>
+        </div>
     {% endfor %}
-</ul>
-
-<a href="{% url 'emotion_logs:new_topic' %}"> Add a new topic </a>
+</div>
 
 {% endblock content %}

@@ -1,6 +1,8 @@
-asgiref==3.7.2
-Django==4.2.5
-django-bootstrap5==23.3
+asgiref==3.12.1
+Django==5.2.17
+django-bootstrap5==25.3
+django-allauth==65.19.4
+requests==2.34.2
 platformshconfig==2.4.0
 sqlparse==0.4.4
 tzdata==2023.3

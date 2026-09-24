@@ -1,8 +1,27 @@
 {% extends "emotion_logs/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Create account | Emotion Logs{% endblock title %}
+
 {% block content %}
- <form action="{% url 'accounts:register' %}" method='post'>
- {% csrf_token %}
- {{ form.as_div }}
- <button name="submit">Register</button>
- </form>
+<div class="row justify-content-center">
+	<div class="col-12 col-sm-10 col-md-7 col-lg-5">
+		<div class="card bg-white p-4 p-md-5">
+			<div class="mb-4">
+				<p class="text-uppercase text-muted small fw-semibold mb-2">Start simply</p>
+				<h1 class="h2">Create your account</h1>
+				<p class="text-muted mb-0">Your journal is private to your account.</p>
+			</div>
+			<form action="{% url 'accounts:register' %}" method="post" autocomplete="on">
+				{% csrf_token %}
+				{% bootstrap_form form %}
+				<button class="btn btn-primary w-100 mt-3" name="submit" type="submit">Create account</button>
+			</form>
+			<p class="text-center text-muted mt-4 mb-0">
+				Already have an account?
+				<a href="{% url 'accounts:login' %}">Log in</a>
+			</p>
+		</div>
+	</div>
+</div>
 {% endblock content %}

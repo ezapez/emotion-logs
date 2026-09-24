@@ -1,10 +1,25 @@
 {% extends "emotion_logs/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Edit note | Emotion Logs{% endblock title %}
+
 {% block content %}
- <p><a href="{% url 'emotion_logs:topic' topic.id %}">{{ topic }}</a></p>
- <p>Edit entry:</p>
-  <form action="{% url 'emotion_logs:edit_entry' entry.id %}" method='post'>
-    {% csrf_token %}
-    {{ form.as_div }}
-    <button name="submit">Save changes</button>
- </form>
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card bg-white p-4 p-md-5">
+      <div class="mb-4">
+        <p class="text-uppercase text-muted small fw-semibold mb-2">Update your journal</p>
+        <h1 class="h2">Edit emotion note</h1>
+      </div>
+      <form action="{% url 'emotion_logs:edit_entry' entry.id %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+          <button class="btn btn-primary" name="submit" type="submit">Save changes</button>
+          <a class="btn btn-outline-secondary" href="{% url 'emotion_logs:entries' %}">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock content %}

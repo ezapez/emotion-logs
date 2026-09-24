@@ -7,10 +7,10 @@ relationships:
 
 
 web:
-  upsteam:
+  upstream:
     socket_family: unix
   commands:
-    start: "gunicorn -w 4 -b unix:$SOCKET ll_project.wsgi:application"
+    start: "gunicorn -w 4 -b unix:$SOCKET emotion_tracker.wsgi:application"
   locations:
     "/":
       passthru: true

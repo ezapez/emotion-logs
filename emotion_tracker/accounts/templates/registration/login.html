@@ -1,22 +1,72 @@
 {% extends 'emotion_logs/base.html' %}
 {% load django_bootstrap5 %}
+{% load socialaccount %}
 
 {% block page_header %}
-    <h2> Log in to your account.</h2>
+    <div class="text-center">
+        <p class="text-uppercase text-muted small fw-semibold mb-2">Welcome back</p>
+        <h1 class="h2 mb-2">Log in to Emotion Logs</h1>
+        <p class="text-muted mb-0">Continue tracking how you feel.</p>
+    </div>
 {% endblock page_header %}
 
 {% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    Your username and password did not match. Please try again.
+                </div>
+                {% endif %}
 
-{% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+                <form action="{% url 'accounts:login' %}" method="post" autocomplete="on">
+                    {% csrf_token %}
 
+                    <div class="mb-3">
+                        <label class="form-label" for="id_username">Username</label>
+                        <input type="text" name="username" id="id_username"
+                               class="form-control form-control-lg{% if form.username.errors %} is-invalid{% endif %}"
+                               autocomplete="username" required autofocus>
+                        {% for error in form.username.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-<form action="{% url 'accounts:login' %}" method='post'>
-    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label" for="id_password">Password</label>
+                        <input type="password" name="password" id="id_password"
+                               class="form-control form-control-lg{% if form.password.errors %} is-invalid{% endif %}"
+                               autocomplete="current-password" required>
+                        {% for error in form.password.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
-    {% bootstrap_form form %}
-    {% bootstrap_button button_type="submit" content="Log in" %}
-</form>
+                    {% bootstrap_button button_type="submit" content="Log in" button_class="btn-primary w-100 btn-lg" %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+
+                {% if google_oauth_enabled %}
+                <div class="d-flex align-items-center gap-3 my-4">
+                    <hr class="flex-grow-1 m-0">
+                    <span class="text-muted small">or continue with</span>
+                    <hr class="flex-grow-1 m-0">
+                </div>
+                <a class="btn btn-outline-dark w-100 btn-lg" href="{% provider_login_url 'google' %}">
+                    <span class="fw-semibold">G</span>
+                    Continue with Google
+                </a>
+                {% endif %}
+
+                <p class="text-center text-muted mt-4 mb-0">
+                    New here?
+                    <a href="{% url 'accounts:register' %}">Create an account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

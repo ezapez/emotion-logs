@@ -1,3 +1,27 @@
+# Python environments and caches
+.venv/
+venv/
 emotion_venv/
+.logs/
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Local databases and runtime files
 *.sqlite3
+db.sqlite3
+logs/
+staticfiles/
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

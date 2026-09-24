@@ -1,17 +1,25 @@
 {% extends 'emotion_logs/base.html' %}
 
+{% block title %}Your emotion journal | Emotion Logs{% endblock title %}
+
 
 
 
 {% block page_header %}
-<div class="p-3 mb-4 bg-light border rounded-3">
-    <div class="container-fluid py-4">
-        <h1 class="display-3">Track your Emotions</h1>
-        <p class="lead">An emotion log app is a digital tool that helps you track and monitor your emotions. 
-        By recording and analyzing your mood changes over time, 
-        you can gain valuable insights into your emotional well-being.</p>
-        <a class="btn btn-primary btn-lg mt-1"
-        href="{% url 'accounts:register' %}">Register &raquo;</a>
+<div class="hero-panel bg-white p-4 p-md-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+            <p class="text-uppercase text-muted small fw-semibold mb-3">A quieter place to check in</p>
+            <h1 class="display-5 fw-bold mb-3">Notice how you feel.</h1>
+            <p class="lead text-muted mb-0">Keep a simple record of your emotions and the experiences behind them.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+        {% if user.is_authenticated %}
+        <a class="btn btn-primary btn-lg" href="{% url 'emotion_logs:entries' %}">Open my journal</a>
+        {% else %}
+        <a class="btn btn-primary btn-lg" href="{% url 'accounts:register' %}">Start journaling</a>
+        {% endif %}
+        </div>
     </div>
 </div>
 {% endblock page_header %}

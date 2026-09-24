@@ -3,19 +3,43 @@
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title> Emotion Log</title>
+        <title>{% block title %}Emotion Logs{% endblock title %}</title>
 
         {% load django_bootstrap5 %}
         {% bootstrap_css %}
         {% bootstrap_javascript %}
+        <style>
+            :root {
+                --ink: #172033;
+                --muted: #697386;
+                --canvas: #f5f7fb;
+                --line: #e5e9f0;
+                --accent: #e86f51;
+                --accent-dark: #c95338;
+                --accent-soft: #fff0eb;
+            }
+
+            body { background: var(--canvas); color: var(--ink); min-height: 100vh; }
+            .app-nav { background: #fff; border-bottom: 1px solid var(--line); }
+            .app-brand { color: var(--ink); font-weight: 700; letter-spacing: -0.02em; }
+            .app-brand:hover, .app-brand:focus { color: var(--accent-dark); }
+            .app-main { padding-bottom: 4rem; }
+            .page-heading { border-bottom: 0; padding: 3rem 0 1.5rem; }
+            .page-heading h1 { font-weight: 700; letter-spacing: -0.03em; }
+            .card, .entry-card, .hero-panel { border: 1px solid var(--line); border-radius: 0.75rem; box-shadow: 0 12px 30px rgba(23, 32, 51, 0.06); }
+            .btn-primary { --bs-btn-bg: var(--accent); --bs-btn-border-color: var(--accent); --bs-btn-hover-bg: var(--accent-dark); --bs-btn-hover-border-color: var(--accent-dark); --bs-btn-active-bg: var(--accent-dark); --bs-btn-active-border-color: var(--accent-dark); }
+            .form-control, .form-select { border-color: #d5dbe5; padding: 0.7rem 0.85rem; }
+            .form-control:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 0.2rem rgba(232, 111, 81, 0.16); }
+            .emotion-badge { background: var(--accent-soft); color: var(--accent-dark); font-weight: 600; }
+        </style>
 
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+    <nav class="navbar navbar-expand-md navbar-light app-nav">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'emotion_logs:index' %}">
-                Emotion Logs
+            <a class="navbar-brand app-brand" href="{% url 'emotion_logs:index' %}">
+                Emotion<span class="text-primary">Logs</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
@@ -24,20 +48,12 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'emotion_logs:topics' %}">
-                      Topics</a></li>
-                </ul> <!-- End of links on left side of navbar -->
-
-
-
-                <!-- Account-related links -->
+                                <!-- Account-related links -->
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
 
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <span class="navbar-text me-2">Hello, {{ user.username }}.
+                    <span class="navbar-text me-3">Hi, {{ user.username }}
                     </span></li>
                 {% else %}
                 <li class="nav-item">
@@ -54,8 +70,7 @@
             {% if user.is_authenticated %}
             <form action="{% url 'accounts:logout' %}" method='post'>
             {% csrf_token %}
-            <button name='submit' class='btn btn-outline-secondary btn-sm'>
-                Log out</button>
+                <button name='submit' class='btn btn-outline-secondary btn-sm'>Log out</button>
             </form>
             {% endif %}
 
@@ -64,8 +79,8 @@
         </div> <!-- Closes navbar's container -->
     </nav> <!-- End of navbar -->
 
-    <main class="container">
-        <div class="pb-2 mb-2 border-bottom">
+    <main class="container app-main">
+        <div class="page-heading">
           {% block page_header %}{% endblock page_header %}
         </div>
     
