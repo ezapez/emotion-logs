@@ -1,0 +1,77 @@
+{% extends "admin/base.html" %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --admin-ink: var(--body-fg);
+        --admin-muted: var(--body-quiet-color);
+        --admin-canvas: var(--body-bg);
+        --admin-surface: var(--body-bg);
+        --admin-line: var(--hairline-color);
+        --admin-accent: #d85e43;
+        --admin-accent-dark: #b74730;
+        --admin-nav: var(--header-bg);
+    }
+
+    body, #container { background: var(--admin-canvas); color: var(--admin-ink); }
+    #header { background: var(--admin-nav); color: var(--header-color); box-shadow: 0 2px 12px rgba(16, 24, 40, .12); }
+    #branding h1, #branding h1 a:link, #branding h1 a:visited { color: var(--header-color); font-size: 1.15rem; font-weight: 700; }
+    #user-tools { color: #dbe3ef; }
+    #user-tools a { border-bottom-color: rgba(255, 255, 255, .4); color: #fff; }
+    div.breadcrumbs { background: var(--breadcrumbs-bg); border-bottom: 1px solid var(--admin-line); color: var(--admin-muted); padding: 12px 24px; }
+    div.breadcrumbs a { color: var(--breadcrumbs-link-fg); }
+    #content { padding: 28px 32px; }
+    #content h1 { color: var(--admin-ink); font-size: 1.8rem; font-weight: 700; }
+    .module, #changelist, .inline-group, .submit-row { background: var(--admin-surface); border: 1px solid var(--admin-line); border-radius: 10px; box-shadow: 0 5px 18px rgba(23, 32, 51, .045); overflow: hidden; }
+    .module h2, .module caption, .inline-group h2 { background: var(--darkened-bg); border-bottom: 1px solid var(--admin-line); color: var(--admin-ink); font-size: .95rem; font-weight: 700; padding: 14px 18px; }
+    #content-main .module caption { background: var(--darkened-bg); color: var(--admin-ink); letter-spacing: 0; padding: 14px 18px; text-align: left; text-transform: none; }
+    #content-main .module caption a:link, #content-main .module caption a:visited { color: var(--admin-ink); font-size: .95rem; font-weight: 700; }
+    #nav-sidebar { background: var(--admin-surface); border-right: 1px solid var(--admin-line); }
+    #nav-sidebar .current-model { background: var(--selected-bg); }
+    #nav-sidebar .current-model a { color: var(--admin-accent-dark); font-weight: 700; }
+    a:link, a:visited { color: var(--link-fg); }
+    .button, input[type=submit], input[type=button], .submit-row input, a.button, .object-tools a { background: var(--admin-accent); border: 0; border-radius: 6px; color: #fff; font-weight: 600; padding: 9px 14px; }
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover, .object-tools a:hover { background: var(--admin-accent-dark); color: #fff; }
+    .object-tools a.addlink { background: var(--admin-accent); }
+    #changelist-filter { background: var(--admin-surface); border-left: 1px solid var(--admin-line); }
+    #changelist-filter h2 { background: var(--admin-nav); color: var(--header-color); }
+    #changelist table thead th { background: var(--darkened-bg); }
+    #changelist table tbody tr:hover { background: var(--selected-bg); }
+    .overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 0 0 24px; }
+    .overview-card { background: var(--admin-surface); border: 1px solid var(--admin-line); border-radius: 10px; box-shadow: 0 5px 18px rgba(23, 32, 51, .045); display: block; padding: 20px; text-decoration: none; }
+    .overview-card span { color: var(--admin-muted); display: block; font-size: .88rem; }
+    .overview-card strong { color: var(--admin-ink); display: block; font-size: 2rem; margin-top: 5px; }
+    .overview-card:hover { border-color: var(--admin-accent); transform: translateY(-1px); }
+    .activity-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-bottom: 24px; }
+    .activity-panel { background: var(--admin-surface); border: 1px solid var(--admin-line); border-radius: 10px; overflow: hidden; }
+    .activity-panel h2 { border-bottom: 1px solid var(--admin-line); color: var(--admin-ink); font-size: 1rem; margin: 0; padding: 15px 18px; }
+    .activity-list { list-style: none; margin: 0; padding: 0; }
+    .activity-list li { align-items: center; border-bottom: 1px solid var(--admin-line); display: flex; justify-content: space-between; gap: 12px; padding: 12px 18px; }
+    .activity-list li:last-child { border-bottom: 0; }
+    .activity-meta { color: var(--admin-muted); display: block; font-size: .8rem; margin-top: 3px; }
+    .status-pill { background: #e8f6ee; border-radius: 999px; color: #217447; font-size: .75rem; font-weight: 700; padding: 4px 9px; }
+    .status-pill.inactive { background: #f1f2f4; color: #5d6675; }
+    .analytics-section { margin: 26px 0; }
+    .analytics-heading { align-items: end; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; margin-bottom: 14px; }
+    .analytics-heading h2 { color: var(--body-fg); font-size: 1.35rem; margin: 0 0 5px; }
+    .analytics-heading p, .analytics-card p, .analytics-privacy-message { color: var(--body-quiet-color); margin: 0; }
+    .analytics-total { color: var(--body-fg); font-size: .9rem; font-weight: 700; }
+    .analytics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .analytics-card { background: var(--body-bg); border: 1px solid var(--hairline-color); border-radius: 10px; box-shadow: 0 5px 18px rgba(23, 32, 51, .045); padding: 18px; }
+    .analytics-card h3 { color: var(--body-fg); font-size: 1rem; margin: 0 0 5px; }
+    .analytics-card p { font-size: .84rem; margin-bottom: 12px; }
+    .analytics-chart-wrap { height: 300px; position: relative; }
+    .analytics-privacy-message { background: var(--darkened-bg); border: 1px solid var(--hairline-color); border-radius: 8px; padding: 16px; }
+    input, textarea, select, .vTextField { border-color: #cfd6e1; border-radius: 5px; }
+    input:focus, textarea:focus, select:focus { border-color: var(--admin-accent); outline-color: var(--admin-accent); }
+    @media (max-width: 767px) {
+        #content { padding: 20px 14px; }
+        div.breadcrumbs { padding: 10px 14px; }
+        .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .activity-grid { grid-template-columns: 1fr; }
+        .analytics-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 420px) { .overview-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}

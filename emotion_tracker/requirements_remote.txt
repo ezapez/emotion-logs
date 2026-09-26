@@ -1,3 +1,3 @@
-# Requirements for live project.
-gunicorn
-psycopg2
+# Production web server and PostgreSQL driver.
+gunicorn==23.0.0
+psycopg[binary]==3.3.6

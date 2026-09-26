@@ -1,0 +1,131 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+{% if user.is_superuser %}
+<section aria-labelledby="overview-heading">
+    <h2 id="overview-heading">Workspace overview</h2>
+    <div class="overview-grid">
+        <a class="overview-card" href="{% url 'admin:auth_user_changelist' %}">
+            <span>Total users</span>
+            <strong>{{ admin_user_count }}</strong>
+        </a>
+        <a class="overview-card" href="{% url 'admin:auth_user_changelist' %}?is_active__exact=1">
+            <span>Active accounts</span>
+            <strong>{{ admin_active_user_count }}</strong>
+        </a>
+        <a class="overview-card" href="{% url 'admin:auth_user_changelist' %}?is_active__exact=0">
+            <span>Inactive accounts</span>
+            <strong>{{ admin_inactive_user_count }}</strong>
+        </a>
+    </div>
+</section>
+
+<div class="activity-grid">
+    <section class="activity-panel" aria-labelledby="recent-users-heading">
+        <h2 id="recent-users-heading">Recently joined users</h2>
+        <ul class="activity-list">
+            {% for account in admin_recent_users %}
+            <li>
+                <span>
+                    <a href="{% url 'admin:auth_user_change' account.pk %}">{{ account.username }}</a>
+                    <span class="activity-meta">Joined {{ account.date_joined|date:'M j, Y' }}{% if account.last_login %} · Last login {{ account.last_login|date:'M j, Y' }}{% else %} · Never logged in{% endif %}</span>
+                </span>
+                <span class="status-pill{% if not account.is_active %} inactive{% endif %}">{% if account.is_active %}Active{% else %}Inactive{% endif %}</span>
+            </li>
+            {% empty %}
+            <li>No user accounts yet.</li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+<section class="analytics-section" aria-labelledby="private-analytics-heading">
+    <div class="analytics-heading">
+        <div>
+            <h2 id="private-analytics-heading">Emotion activity</h2>
+            <p>Anonymous totals only. Note text and user-to-emotion details are not shown here.</p>
+        </div>
+        <span class="analytics-total">{{ admin_analytics.total_entries }} total notes</span>
+    </div>
+    {{ admin_analytics|json_script:"admin-analytics-data" }}
+    <div class="analytics-grid">
+        <section class="analytics-card" aria-labelledby="all-emotions-heading">
+            <h3 id="all-emotions-heading">Emotion totals</h3>
+            <p>All recorded notes, grouped by emotion.</p>
+            <div class="analytics-chart-wrap">
+                <canvas id="all-emotions-chart" role="img" aria-label="Aggregate emotion counts across users"></canvas>
+            </div>
+        </section>
+        <section class="analytics-card" aria-labelledby="monthly-activity-heading">
+            <h3 id="monthly-activity-heading">Monthly logging activity</h3>
+            <p>Aggregate number of notes recorded in the last 12 months.</p>
+            <div class="analytics-chart-wrap">
+                <canvas id="monthly-activity-chart" role="img" aria-label="Aggregate monthly emotion note counts"></canvas>
+            </div>
+        </section>
+    </div>
+</section>
+{% else %}
+<p class="analytics-privacy-message">Aggregate emotion analytics are available to superusers only.</p>
+{% endif %}
+{{ block.super }}
+{% endblock content %}
+
+{% block footer %}
+{{ block.super }}
+{% if user.is_superuser %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<script>
+    const aggregateEmotionData = JSON.parse(document.getElementById('admin-analytics-data').textContent);
+    const aggregateColors = ['#d85e43', '#547a8a', '#cf9f33', '#9b638e', '#4c927b', '#6287c4', '#8b8f99'];
+
+    new Chart(document.getElementById('all-emotions-chart'), {
+        type: 'bar',
+        data: {
+            labels: aggregateEmotionData.emotion_labels,
+            datasets: [{
+                data: aggregateEmotionData.emotion_values,
+                backgroundColor: aggregateColors,
+                borderRadius: 5,
+                maxBarThickness: 26,
+            }],
+        },
+        options: {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true, ticks: { precision: 0 } },
+                y: { grid: { display: false } },
+            },
+        },
+    });
+
+    new Chart(document.getElementById('monthly-activity-chart'), {
+        type: 'line',
+        data: {
+            labels: aggregateEmotionData.month_labels,
+            datasets: [{
+                label: 'Notes',
+                data: aggregateEmotionData.monthly_values,
+                borderColor: '#547a8a',
+                backgroundColor: 'rgba(84, 122, 138, 0.12)',
+                pointBackgroundColor: '#d85e43',
+                pointRadius: 3,
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.25,
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { maxTicksLimit: 6 }, grid: { display: false } },
+                y: { beginAtZero: true, ticks: { precision: 0 } },
+            },
+        },
+    });
+</script>
+{% endif %}
+{% endblock footer %}
